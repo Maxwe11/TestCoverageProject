@@ -9,5 +9,11 @@
         {
             new Foo("test");
         }
+
+        [Fact]
+        public void Ctor_Fail()
+        {
+            new Foo(null);
+        }
     }
 }
