@@ -1,5 +1,7 @@
 ﻿namespace TestCoverageProject.Tests
 {
+    using System;
+
     using Xunit;
 
     public class FooTest
@@ -13,7 +15,7 @@
         [Fact]
         public void Ctor_Fail()
         {
-            new Foo(null);
+            Assert.Throws<ArgumentException>(() => new Foo(string.Empty));
         }
     }
 }

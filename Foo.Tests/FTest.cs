@@ -11,7 +11,7 @@
         [Fact]
         public void FTest_Ctor()
         {
-            Assert.Throws<ArgumentException>(() => new Foo("test"));
+            Assert.Throws<ArgumentNullException>(() => new Foo(null));
         }
     }
 }

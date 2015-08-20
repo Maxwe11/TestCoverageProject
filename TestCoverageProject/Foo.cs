@@ -6,9 +6,14 @@
     {
         public Foo(string bar)
         {
-            if (string.IsNullOrEmpty(bar))
+            if (bar == null)
             {
                 throw new ArgumentNullException(nameof(bar));
+            }
+
+            if (bar == string.Empty)
+            {
+                throw new ArgumentException(nameof(bar));
             }
 
             Bar = bar;
