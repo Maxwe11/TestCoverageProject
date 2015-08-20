@@ -10,4 +10,4 @@ build:
   project: TestCoverageProject.sln
   verbosity: minimal
 test:
-  assemblies: '*.Tests.dll'
+  assemblies: '**\*.Tests.dll'
