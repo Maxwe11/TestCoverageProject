@@ -7,12 +7,18 @@ $reportGeneratorExe = "$packagesDir/ReportGenerator.2.2.0.0/tools/ReportGenerato
 $testDir = "*/bin/*"
 $tests = @("$testDir/*Tests.dll")
 $targetArgs = Get-ChildItem $tests -Recurse
-$outputXml = "CodeCoverage.xml"
+$openCoverXml = "opencover_report.xml"
+$xunitXml = "xunit_report.xml"
 $converallsNetExe = "$packagesDir/coveralls.io.1.3.4/tools/coveralls.net.exe"
-$openCoverArgs = @('-register:user', "`"-target:$xunitConsoleExe`"", "`"-targetargs:$targetArgs -appveyor -noshadow -nologo -quiet`"", "`"-filter:+[TestCoverageProject]*`"", "`"-output:$outputXml`"", '-coverbytest:*Tests.dll', '-log:All', '-returntargetcode')
-& $openCoverExe $openCoverArgs
-& $reportGeneratorExe -verbosity:Info "`"-reports:$outputXml`"" "`"-targetdir:$coverageDir`""
-if (!$isPullRequest)
+$openCoverArgs = @('-register:user', "`"-target:$xunitConsoleExe`"", "`"-targetargs:$targetArgs -appveyor -noshadow -nologo -quiet`"", "`"-filter:+[TestCoverageProject]*`"", "`"-output:$openCoverXml`"", '-coverbytest:*Tests.dll', '-log:All', '-returntargetcode')
+& $xunitConsoleExe $targetArgs -xml $xunitXml
+$testsFailed = Select-String $xunitXml -pattern "<failure .*>" -Quiet
+if (!$testsFailed)
 {
-    & $converallsNetExe --opencover $outputXml --full-sources --repo-token R5PvoZmhUHpuI3Sq6KU3Wc9hxOH2uTAzD        
+    & $openCoverExe $openCoverArgs
+    & $reportGeneratorExe -verbosity:Info "`"-reports:$openCoverXml`"" "`"-targetdir:$coverageDir`""
+    if (!$isPullRequest)
+    {
+        & $converallsNetExe --opencover $openCoverXml --full-sources --repo-token R5PvoZmhUHpuI3Sq6KU3Wc9hxOH2uTAzD        
+    }
 }
